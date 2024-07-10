@@ -1,10 +1,12 @@
 from flask import Flask , request, jsonify
 from openai import OpenAI
-import os 
-import openai
+import os ,psycopg2 ,openai
+from db.db import init_db
 
 app = Flask(__name__)
 client = OpenAI()
+init_db()
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
