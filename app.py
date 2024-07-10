@@ -1,7 +1,10 @@
 from flask import Flask , request, jsonify
+from openai import OpenAI
+import os 
+import openai
 
 app = Flask(__name__)
-
+client = OpenAI()
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
@@ -14,8 +17,18 @@ def ask_question():
     
     if not question_text:
         return jsonify({'error': 'No question provided'}), 400
+   
+    try:
+        response = openai.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": question_text}]
+        )
+        answer_text = response.choices[0].message.content
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
-    return '', 200
+    return jsonify({'answer': answer_text}), 200
+  
 
 
 
